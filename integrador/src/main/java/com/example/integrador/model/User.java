@@ -5,7 +5,17 @@ public class User {
     private String name;
     private String email;
 
-    // Getters and Setters
+    // Constructor con parámetros
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    // Constructor vacío
+    public User() {}
+
+    // Getters y setters
     public Long getId() {
         return id;
     }

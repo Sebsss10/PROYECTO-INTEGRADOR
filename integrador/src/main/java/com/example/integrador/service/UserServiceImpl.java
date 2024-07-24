@@ -4,43 +4,50 @@ import com.example.integrador.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final Map<Long, User> userMap = new HashMap<>();
-    private long currentId = 1;
+    private List<User> users = new ArrayList<>();
+    private AtomicLong idCounter = new AtomicLong();
+
+    // Constructor para añadir usuarios iniciales
+    public UserServiceImpl() {
+        // Inicializar datos
+        users.add(new User(1L, "Sebastian Hernández", "hernandezsebastian1796@gmail.com"));
+        users.add(new User(2L, "Daniel Hernández", "danielhernandez@emilianisomascos.com"));
+    }
 
     @Override
     public User createUser(User user) {
-        user.setId(currentId++);
-        userMap.put(user.getId(), user);
+        user.setId(idCounter.incrementAndGet());
+        users.add(user);
         return user;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<>(userMap.values());
+        return users;
     }
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return Optional.ofNullable(userMap.get(id));
+        return users.stream().filter(user -> user.getId().equals(id)).findFirst();
     }
 
     @Override
     public User updateUser(Long id, User user) {
-        user.setId(id);
-        userMap.put(id, user);
-        return user;
+        User existingUser = getUserById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        existingUser.setName(user.getName());
+        existingUser.setEmail(user.getEmail());
+        return existingUser;
     }
 
     @Override
     public void deleteUser(Long id) {
-        userMap.remove(id);
+        users.removeIf(user -> user.getId().equals(id));
     }
 }
