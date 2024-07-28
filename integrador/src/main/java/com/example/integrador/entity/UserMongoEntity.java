@@ -19,14 +19,11 @@ public class UserMongoEntity implements UserDetails {
     private String password;
     private Role role;
 
+    // Constructor por defecto
     public UserMongoEntity() {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
     }
 
+    // Constructor con parámetros
     public UserMongoEntity(String id, String name, String email) {
         this.id = id;
         this.name = name;
@@ -38,47 +35,37 @@ public class UserMongoEntity implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
-    public String getUsername() {
-        return this.getEmail();
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
+    // Getters y setters
     public String getId() {
         return id;
     }
@@ -103,6 +90,15 @@ public class UserMongoEntity implements UserDetails {
         this.email = email;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
